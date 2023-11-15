@@ -21,8 +21,8 @@ find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 
-add_executable(diff_controller src/diff_controller.cpp src/wheel_driver.cpp)
-add_executable(teleop_joy src/teleop_joy.cpp src/joystick_handler.cpp)
+add_executable(diff_controller src/diff_controller.cpp src/common/wheel_driver.cpp)
+add_executable(teleop_joy src/teleop_joy.cpp src/common/joystick_handler.cpp)
 
 target_include_directories(diff_controller PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
