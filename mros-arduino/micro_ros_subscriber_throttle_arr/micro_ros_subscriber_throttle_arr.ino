@@ -52,13 +52,13 @@ void subscription_callback(const void *msgin) {
   // left motor
   if (throttle_l > 0){
     duty_l = 255 * throttle_l;
-    digitalWrite(CW_PIN_L, HIGH);
-    digitalWrite(CCW_PIN_L, LOW);
+    digitalWrite(CW_PIN_L, LOW);
+    digitalWrite(CCW_PIN_L, HIGH);
   }
   else if (throttle_l < 0){
     duty_l = -255 * throttle_l;
-    digitalWrite(CW_PIN_L, LOW);
-    digitalWrite(CCW_PIN_L, HIGH);
+    digitalWrite(CW_PIN_L, HIGH);
+    digitalWrite(CCW_PIN_L, LOW);
   }
   else if (throttle_l == 0){
     duty_l = 0;
@@ -69,13 +69,13 @@ void subscription_callback(const void *msgin) {
   // right motor
   if (throttle_r > 0){
     duty_r = 255 * throttle_r;
-    digitalWrite(CW_PIN_R, LOW);
-    digitalWrite(CCW_PIN_R, HIGH);
+    digitalWrite(CW_PIN_R, HIGH);
+    digitalWrite(CCW_PIN_R, LOW);
   }
   else if (throttle_r < 0){
     duty_r = -255 * throttle_r;
-    digitalWrite(CW_PIN_R, HIGH);
-    digitalWrite(CCW_PIN_R, LOW);
+    digitalWrite(CW_PIN_R, LOW);
+    digitalWrite(CCW_PIN_R, HIGH);
   }
   else if (throttle_r == 0){
     duty_r = 0;

@@ -26,8 +26,8 @@ void WheelDriver::callback(const geometry_msgs::msg::Twist::SharedPtr msg)
 
   if(_drive_model == "diff_drive"){
     // diffrential controller
-    float omega_l = (linear_velocity-angular_velocity*(BASE/2))/RADIUS;
-    float omega_r = (linear_velocity+angular_velocity*(BASE/2))/RADIUS;
+    float omega_l = (linear_velocity+angular_velocity*(BASE/2))/RADIUS;
+    float omega_r = (linear_velocity-angular_velocity*(BASE/2))/RADIUS;
     float throttle_l = (omega_l*omega_to_rpm)/MAX_RPM;
     float throttle_r = (omega_r*omega_to_rpm)/MAX_RPM;
     auto pub_msg = std_msgs::msg::Float32MultiArray();
@@ -37,9 +37,9 @@ void WheelDriver::callback(const geometry_msgs::msg::Twist::SharedPtr msg)
     pub_throttle->publish(pub_msg);
   }
   else if (_drive_model == "torque_control"){
-    // torque control via 
-    float omega_l = (linear_velocity-angular_velocity*(BASE/2))/RADIUS;
-    float omega_r = (linear_velocity+angular_velocity*(BASE/2))/RADIUS;
+    // torque control (currently not implemented)
+    float omega_l = (linear_velocity+angular_velocity*(BASE/2))/RADIUS;
+    float omega_r = (linear_velocity-angular_velocity*(BASE/2))/RADIUS;
     float throttle_l = (omega_l*omega_to_rpm)/MAX_RPM;
     float throttle_r = (omega_r*omega_to_rpm)/MAX_RPM;
     auto pub_msg = std_msgs::msg::Float32MultiArray();
