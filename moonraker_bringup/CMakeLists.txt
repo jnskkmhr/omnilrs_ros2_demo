@@ -22,7 +22,6 @@ find_package(realsense2_camera_msgs REQUIRED)
 find_package(realsense2_description REQUIRED)
 find_package(slam_toolbox REQUIRED)
 find_package(nav2_bringup REQUIRED)
-find_package(nav2_simple_commander REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -30,9 +29,8 @@ if(BUILD_TESTING)
 endif()
 
 # Install launch files.
-install(DIRECTORY
-  launch
-  DESTINATION share/${PROJECT_NAME}/
+install(DIRECTORY launch
+        DESTINATION share/${PROJECT_NAME}/
 )
 
 ament_package()

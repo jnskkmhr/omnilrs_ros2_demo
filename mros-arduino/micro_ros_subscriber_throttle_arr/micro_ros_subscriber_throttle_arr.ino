@@ -128,8 +128,8 @@ void destroy_entities()
 {
   rmw_context_t * rmw_context = rcl_context_get_rmw_context(&support.context);
   (void) rmw_uros_set_context_entity_destroy_session_timeout(rmw_context, 0);
-
-  rcl_subscriber_fini(&subscriber, &node);
+  
+  rcl_subscription_fini(&subscriber, &node);
   rclc_executor_fini(&executor);
   rcl_node_fini(&node);
   rclc_support_fini(&support);
