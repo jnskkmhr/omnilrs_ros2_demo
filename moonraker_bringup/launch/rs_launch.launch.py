@@ -21,6 +21,11 @@ def generate_launch_description():
     usb_port_id = LaunchConfiguration('usb_port_id')
     camera_name = LaunchConfiguration('camera_name')
     camera_ns = LaunchConfiguration('camera_namespace')
+    color_profile = LaunchConfiguration('color_profile')
+    depth_profile = LaunchConfiguration('depth_profile')
+    depth_emitter = LaunchConfiguration('depth_emitter')
+    depth_gain = LaunchConfiguration('depth_gain')
+    unite_imu_method = LaunchConfiguration('unite_imu_method')
 
     # define parameter configuration launch
     color_arg = DeclareLaunchArgument(
@@ -68,6 +73,35 @@ def generate_launch_description():
         default_value='camera',
         description='Camera namespace'
     )
+    depth_module_profile_arg = DeclareLaunchArgument(
+        'depth_profile',
+        default_value='640x480x15',
+        description='Depth module profile'
+    )
+
+    color_profile_arg = DeclareLaunchArgument(
+        'color_profile',
+        default_value='1280x720x30',
+        description='Color profile'
+    )
+
+    depth_emitter_arg = DeclareLaunchArgument(
+        'depth_emitter',
+        default_value='0',
+        description='Depth emitter'
+    )
+
+    depth_gain_arg = DeclareLaunchArgument(
+        'depth_gain',
+        default_value='16',
+        description='Depth gain'
+    )
+
+    unite_imu_method_arg = DeclareLaunchArgument(
+        'unite_imu_method',
+        default_value='2',
+        description='Unite IMU method'
+    )
 
     launch_rs = os.path.join(rs2_workspace, 'launch', 'rs_launch.py')
 
@@ -84,28 +118,12 @@ def generate_launch_description():
             ('usb_port_id', usb_port_id), 
             ('camera_name', camera_name),
             ('camera_namespace', camera_ns),
+            ('depth_module.profile', depth_profile),
+            ('rgb_camera.profile', color_profile), 
+            ('depth_module.emitter_enabled', depth_emitter),
+            ('depth_module.gain', depth_gain), 
+            ('unite_imu_method', unite_imu_method), 
                 ]
-    )
-
-    # ros2 set param /camera/camera depth_module.emitter_enabled 0 in launch file
-    # get value of cameraname and camera namespace and save it in a variable
-
-    disable_laser_emitter1_cmd = ExecuteProcess(
-        cmd=[
-            'ros2', 'param', 'set',
-            '/d435i/d435i',
-            'depth_module.emitter_enabled', '0'
-        ],
-        shell=False
-    )
-
-    disable_laser_emitter2_cmd = ExecuteProcess(
-        cmd=[
-            'ros2', 'param', 'set',
-            '/d455/d455',
-            'depth_module.emitter_enabled', '0'
-        ],
-        shell=False
     )
 
     # add launch action to launch description
@@ -119,7 +137,10 @@ def generate_launch_description():
     ld.add_action(usb_port_id_arg)
     ld.add_action(camera_name_arg)
     ld.add_action(camera_ns_arg)
+    ld.add_action(depth_module_profile_arg)
+    ld.add_action(color_profile_arg)
+    ld.add_action(depth_emitter_arg)
+    ld.add_action(depth_gain_arg)
+    ld.add_action(unite_imu_method_arg)
     ld.add_action(rs2_launch)
-    ld.add_action(disable_laser_emitter1_cmd)
-    ld.add_action(disable_laser_emitter2_cmd)
     return ld
