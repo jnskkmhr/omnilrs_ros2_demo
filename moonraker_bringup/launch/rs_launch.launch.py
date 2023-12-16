@@ -21,9 +21,11 @@ def generate_launch_description():
     usb_port_id = LaunchConfiguration('usb_port_id')
     camera_name = LaunchConfiguration('camera_name')
     camera_ns = LaunchConfiguration('camera_namespace')
+    color_profile = LaunchConfiguration('color_profile')
     depth_profile = LaunchConfiguration('depth_profile')
     depth_emitter = LaunchConfiguration('depth_emitter')
-    color_profile = LaunchConfiguration('color_profile')
+    depth_gain = LaunchConfiguration('depth_gain')
+    unite_imu_method = LaunchConfiguration('unite_imu_method')
 
     # define parameter configuration launch
     color_arg = DeclareLaunchArgument(
@@ -89,6 +91,18 @@ def generate_launch_description():
         description='Depth emitter'
     )
 
+    depth_gain_arg = DeclareLaunchArgument(
+        'depth_gain',
+        default_value='16',
+        description='Depth gain'
+    )
+
+    unite_imu_method_arg = DeclareLaunchArgument(
+        'unite_imu_method',
+        default_value='2',
+        description='Unite IMU method'
+    )
+
     launch_rs = os.path.join(rs2_workspace, 'launch', 'rs_launch.py')
 
 
@@ -106,7 +120,9 @@ def generate_launch_description():
             ('camera_namespace', camera_ns),
             ('depth_module.profile', depth_profile),
             ('rgb_camera.profile', color_profile), 
-            ('depth_module.emitter_enabled', depth_emitter)
+            ('depth_module.emitter_enabled', depth_emitter),
+            ('depth_module.gain', depth_gain), 
+            ('unite_imu_method', unite_imu_method), 
                 ]
     )
 
@@ -124,5 +140,7 @@ def generate_launch_description():
     ld.add_action(depth_module_profile_arg)
     ld.add_action(color_profile_arg)
     ld.add_action(depth_emitter_arg)
+    ld.add_action(depth_gain_arg)
+    ld.add_action(unite_imu_method_arg)
     ld.add_action(rs2_launch)
     return ld
