@@ -1,7 +1,6 @@
 # Moonraker Rover software stack
 
-All softwares are stored here. 
-For moonraker, we use ROS2 foxy. 
+Moonraker project with ROS2 Humble
 
 ## Git maintenance rule
 - Always put the stable code in `main` branch
