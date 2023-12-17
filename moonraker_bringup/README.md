@@ -3,11 +3,12 @@
 Enables the following in one launch file
 
 1. Launch Multiple Realsense Camera
-2. Launch graph slam (slam_toolbox) + Nav2 server
-3. Launch ros2 bag record
+2. Launch RECOH Theta camera
+3. Launch graph slam (slam_toolbox) + Nav2 server
+4. Launch ros2 bag record
 
 
-## RealSense
+## 1. RealSense
 
 Register camera launch command as aliases since it is tedious to type long command all the time.\
 Please replace usb_port_id with your own port setting.
@@ -63,8 +64,18 @@ By default you will see the following topics:
 /tf_static
 ```
 
-## Rosbag2
-Save ros2 bag as mcap format.
+## 2. RECOH Theta
+```
+ros2 launch moonraker_bringup theta_launch.launch.py
+```
+
+## 3. Nav2 (WIP)
+TODO: 
+- Make URDF (need this for relative transform of robot links)
+- Include solid-state LiDAR (UTM30LX from Hokuyo)
+
+## 4. Rosbag2
+Save ros2 bag as `mcap` format.
 ```
 ros2 launch moonraker_bringup record_bag.launch.py
 ```
