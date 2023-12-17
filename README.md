@@ -15,4 +15,14 @@ The repository mainly depend on
 - Host PC: ThinkPad (Ubuntu 20.04, ROS2 Foxy)
 - MCU: ESP32
 
+## Install
+Clone this repoo
+```
+mkdir -p ros2_ws/src
+cd ros2_ws/src
+git clone --recursive git@github.com:Space-Robotics-Laboratory/rover_moonraker.git
+rosdep install --from-paths src -i
+colcon build --symlink-install
+```
+
 ## System diagram (WIP)
