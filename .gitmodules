@@ -1,0 +1,3 @@
+[submodule "theta_driver"]
+	path = theta_driver
+	url = https://github.com/stella-cv/theta_driver.git
