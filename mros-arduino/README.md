@@ -14,16 +14,16 @@ Arduino library: esp32-Dev-Module
 Refer to this [site](https://interface.cqpub.co.jp/esp32-arduino-ide-2/)
 
 ### 1. micro-ros-arduino
-Download zip file from [here](https://github.com/micro-ROS/micro_ros_arduino/releases/tag/v2.0.5-foxy) and add it to Arduino IDE. 
+Download zip file from [here](https://github.com/micro-ROS/micro_ros_arduino/releases/tag/v2.0.7-humble) and add it to Arduino IDE. 
 
 ### 2. micro-ros-agent
 Use docker to run this.
 ```
-docker run -it --rm -v /dev:/dev --privileged --net=host microros/micro-ros-agent:foxy serial --dev /dev/ttyUSB0 -v6
+docker run -it --rm -v /dev:/dev --privileged --net=host microros/micro-ros-agent:humble serial --dev /dev/ttyUSB0 -v6
 ```
 While running micro-ros-agent, esp32 can publish/subscribe topic in ROS2 DDS. 
 
-If above does not run, make sure you grant rmission to `/dev/ttyUSB0`. To ensure that, do the following.
+If above does not run, make sure you grant permission to `/dev/ttyUSB0`. To do this, run the following.
 ```
 sudo chown $USER /dev/ttyUSB0
 ```
