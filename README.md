@@ -1,6 +1,9 @@
 # Moonraker Rover software stack
 
+<img src="media/moonraker.jpg"></img>
+
 Moonraker project with ROS2 Humble
+- maintainer: Junnosuke Kamohara
 
 ## Git maintenance rule
 - Always put the stable code in `main` branch
@@ -13,16 +16,23 @@ Moonraker project with ROS2 Humble
 The repository mainly depend on
 - Robot computer: NUC13 (Ubuntu 22.04, ROS2 Humble)
 - Host PC: ThinkPad (Ubuntu 20.04, ROS2 Foxy)
-- MCU: ESP32
+- Micro controller: ESP32 (micro-ros-arduino for Humble)
 
-## Install
+## Setup package
 Clone this repoo
-```
+```bash
 mkdir -p ros2_ws/src
 cd ros2_ws/src
 git clone --recursive git@github.com:Space-Robotics-Laboratory/rover_moonraker.git
 rosdep install --from-paths src -i
 colcon build --symlink-install
+```
+
+## Sorce your workspace
+Before you run, make sure you source the workspace where you built this package.
+```bash
+cd ros2_ws
+source install/setup.bash
 ```
 
 ## System diagram (WIP)
