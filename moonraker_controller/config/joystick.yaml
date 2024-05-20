@@ -1,0 +1,4 @@
+joystick_handler:
+  ros__parameters:
+    max_velocity: 0.3
+    max_omnega: 0.2

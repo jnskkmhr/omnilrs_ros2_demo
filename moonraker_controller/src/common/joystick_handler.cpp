@@ -6,8 +6,6 @@
 
 #define DRIVE_AXIS 1
 #define ROT_AXIS 3
-#define MAX_SPEED 0.3
-#define MAX_OMEGA 0.1
 
 JoystickHandler::JoystickHandler(std::string node_name)
 : Node(node_name) {
@@ -15,14 +13,20 @@ JoystickHandler::JoystickHandler(std::string node_name)
     ("cmd_vel", 10);
     sub_joy = this->create_subscription<sensor_msgs::msg::Joy>
     ("joy", 10, std::bind(&JoystickHandler::callback, this, std::placeholders::_1));
+
+    //declare rosparameter
+    this->declare_parameter("max_velocity", 0.3);
+    this->declare_parameter("max_omega", 0.2);
 }
 
 void JoystickHandler::callback(const sensor_msgs::msg::Joy::SharedPtr msg)
 {
+    float max_velocity = this->get_parameter("max_velocity").as_double();
+    float max_omega = this->get_parameter("max_omega").as_double();
     float drive_throttle = msg->axes[DRIVE_AXIS];
     float rot_throttle = msg->axes[ROT_AXIS];
-    float linear_velocity = drive_throttle * MAX_SPEED;
-    float angular_velocity = rot_throttle * MAX_OMEGA;
+    float linear_velocity = drive_throttle * max_velocity;
+    float angular_velocity = rot_throttle * max_omega;
 
     auto pub_msg = geometry_msgs::msg::Twist();
     pub_msg.linear.x = linear_velocity;

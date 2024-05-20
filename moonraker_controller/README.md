@@ -4,6 +4,11 @@ The package consists of two node:
 1. joy_handler
 2. wheel_drive
 
+## Dependencies
+```bash
+sudo apt-get install ros-$ROS_DISTRO-joy-linux
+```
+
 ## Node information
 ### Node1: joy_handler
 * subscriber: subscribes to `joy`(sensor_msgs/Joy) topic from PS4 joystick
