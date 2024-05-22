@@ -1,30 +1,63 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
+from ament_index_python.packages import get_package_share_directory
+import os
 
 def generate_launch_description():
     ld = LaunchDescription()
-    ld.add_action(
-        Node(
+
+    controller_config = os.path.join(
+        get_package_share_directory('moonraker_controller'),
+        'config',
+        'skid_steer.yaml'
+        )
+
+    joystick_config = os.path.join(
+        get_package_share_directory('moonraker_controller'),
+        'config',
+        'joystick.yaml'
+        )
+    
+    ns = LaunchConfiguration('namespace')
+    ns_arg = DeclareLaunchArgument(
+        'namespace',
+        default_value='',
+    )
+
+    joy_node = Node(
             package='joy_linux', 
+            namespace=ns, 
             executable='joy_linux_node', 
             output='screen',
-            arguments=['--ros-args', '--log-level', 'error']
+            arguments=['--ros-args', '--log-level', 'error'], 
+            name="joy", 
         )
-    )
-    ld.add_action(
-        Node(
+    
+    teleop_node = Node(
             package='moonraker_controller', 
+            namespace=ns,
             executable='teleop_joy', 
             output='screen', 
-            arguments=['--ros-args', '--log-level', 'error']
+            arguments=['--ros-args', '--log-level', 'error'], 
+            name="joystick_handler",
+            parameters=[joystick_config],
             )
-    )
-    ld.add_action(
-        Node(
+    
+    controller_node = Node(
             package='moonraker_controller', 
+            namespace=ns, 
             executable='diff_controller', 
             output='screen', 
-            arguments=['--ros-args', '--log-level', 'error']
+            arguments=['--ros-args', '--log-level', 'error'], 
+            name="diff_controller",
+            parameters=[controller_config],
             )
-    )
+    
+    ld.add_action(ns_arg)
+    ld.add_action(joy_node)
+    ld.add_action(teleop_node)
+    ld.add_action(controller_node)
+
     return ld

@@ -44,6 +44,8 @@ ament_target_dependencies(
   "geometry_msgs"
 )
 
+find_package(joy_linux REQUIRED)
+
 install(
   DIRECTORY include/
   DESTINATION include
@@ -68,6 +70,12 @@ endif()
 # Install launch files.
 install(DIRECTORY
   launch
+  DESTINATION share/${PROJECT_NAME}/
+)
+
+# Install config files
+install(DIRECTORY
+  config
   DESTINATION share/${PROJECT_NAME}/
 )
 
