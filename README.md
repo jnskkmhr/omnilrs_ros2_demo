@@ -2,8 +2,8 @@
 
 <img src="media/moonraker.jpg"></img>
 
-Moonraker project with ROS2 Humble
-- maintainer: Junnosuke Kamohara
+Moonraker project with ROS2 Humble \
+maintainer: Junnosuke Kamohara
 
 ## Git maintenance rule
 - Always put the stable code in `main` branch
@@ -13,10 +13,10 @@ Moonraker project with ROS2 Humble
 - Only upload source code and configuration files (no heavy data!)
 
 ## Environment
-The repository mainly depend on
+The repository depends on
 - Robot computer: NUC13 (Ubuntu 22.04, ROS2 Humble)
-- Host PC: ThinkPad (Ubuntu 20.04, ROS2 Foxy)
 - Micro controller: ESP32 (micro-ros-arduino for Humble)
+- Host PC (Either ROS2 foxy or humble to communicate with robot computer)
 
 ## Setup package
 Clone this repoo

@@ -7,11 +7,10 @@ import os
 
 def generate_launch_description():
     ld = LaunchDescription()
-
-    joystick_config = os.path.join(
-        get_package_share_directory('moonraker_controller'),
+    config = os.path.join(
+        get_package_share_directory('robot_controller'),
         'config',
-        'joystick.yaml'
+        'skid_steer.yaml'
         )
     
     ns = LaunchConfiguration('namespace')
@@ -20,27 +19,17 @@ def generate_launch_description():
         default_value='',
     )
 
-    joy_node = Node(
-            package='joy_linux', 
-            namespace=ns, 
-            executable='joy_linux_node', 
-            output='screen',
-            arguments=['--ros-args', '--log-level', 'error'], 
-            name="joy", 
-        )
-    
-    teleop_node = Node(
-            package='moonraker_controller', 
+    controller_node = Node(
+            package='robot_controller',
             namespace=ns,
-            executable='teleop_joy', 
+            executable='diff_controller', 
             output='screen', 
             arguments=['--ros-args', '--log-level', 'error'], 
-            name="joystick_handler",
-            parameters=[joystick_config],
+            name='diff_controller', 
+            parameters=[config],
             )
     
     ld.add_action(ns_arg)
-    ld.add_action(joy_node)
-    ld.add_action(teleop_node)
+    ld.add_action(controller_node)
 
     return ld

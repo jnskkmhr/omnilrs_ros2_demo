@@ -1,20 +1,19 @@
-# Moonraker bringup package (WIP)
-
-Enables the following in one launch file
+# Robot bringup package (WIP)
+This package is a sort of manager package. 
+It does the following in one launch file
 
 1. Launch Multiple Realsense Camera
 2. Launch RECOH Theta camera
-3. Launch graph slam (slam_toolbox) + Nav2 server
+3. Launch graph slam (slam_toolbox) + Nav2 server (WIP)
 4. Launch ros2 bag record
-
 
 ## 1. RealSense
 
 Register camera launch command as aliases since it is tedious to type long command all the time.\
 Please replace usb_port_id with your own port setting.
 ```
-alias start_d455="ros2 launch moonraker_bringup rs_launch.launch.py usb_port_id:=4-3.1 camera_name:=d455 camera_namespace:=moonraker depth_emitter:=0 depth_gain:=40 enable_gyro:=true enable_accel:=true"
-alias start_d435i="ros2 launch moonraker_bringup rs_launch.launch.py usb_port_id:=4-3.2 camera_name:=d435i camera_namespace:=moonraker depth_emitter:=0 enable_gyro:=true enable_accel:=true"
+alias start_d455="ros2 launch robot_bringup rs_launch.launch.py usb_port_id:=4-3.1 camera_name:=d455 camera_namespace:=moonraker depth_emitter:=0 depth_gain:=40 enable_gyro:=true enable_accel:=true"
+alias start_d435i="ros2 launch robot_bringup rs_launch.launch.py usb_port_id:=4-3.2 camera_name:=d435i camera_namespace:=moonraker depth_emitter:=0 enable_gyro:=true enable_accel:=true"
 ```
 
 Then, call
@@ -66,16 +65,17 @@ By default you will see the following topics:
 
 ## 2. RECOH Theta
 ```
-ros2 launch moonraker_bringup theta_launch.launch.py
+ros2 launch robot_bringup theta_launch.launch.py
 ```
 
 ## 3. Nav2 (WIP)
 TODO: 
 - Make URDF (need this for relative transform of robot links)
-- Include solid-state LiDAR (UTM30LX from Hokuyo)
+- Test depth camera for costmap
+- test visual-inertial SLAM for localization
 
 ## 4. Rosbag2
 Save ros2 bag as `mcap` format.
 ```
-ros2 launch moonraker_bringup record_bag.launch.py
+ros2 launch robot_bringup record_bag.launch.py
 ```

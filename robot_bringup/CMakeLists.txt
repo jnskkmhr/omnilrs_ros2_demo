@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(moonraker_bringup)
+project(robot_bringup)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -15,13 +15,13 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# find dependencies
-find_package(ament_cmake REQUIRED)
-find_package(realsense2_camera REQUIRED)
-find_package(realsense2_camera_msgs REQUIRED)
-find_package(realsense2_description REQUIRED)
-find_package(slam_toolbox REQUIRED)
-find_package(nav2_bringup REQUIRED)
+# # find dependencies
+# find_package(ament_cmake REQUIRED)
+# find_package(realsense2_camera REQUIRED)
+# find_package(realsense2_camera_msgs REQUIRED)
+# find_package(realsense2_description REQUIRED)
+# find_package(slam_toolbox REQUIRED)
+# find_package(nav2_bringup REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
