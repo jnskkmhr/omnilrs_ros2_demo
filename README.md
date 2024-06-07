@@ -1,6 +1,6 @@
 # Moonraker Rover software stack
 
-<img src="media/moonraker.jpg"></img>
+<img src="docs/media/moonraker.jpg"></img>
 
 Moonraker project with ROS2 Humble \
 maintainer: Junnosuke Kamohara

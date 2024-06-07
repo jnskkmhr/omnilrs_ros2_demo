@@ -1,0 +1,13 @@
+launch:
+  - node: 
+      pkg: 'joy_linux'
+      exec: 'joy_linux_node'
+      name: 'joy'
+
+  - node: 
+      pkg: 'robot_controller'
+      exec: 'teleop_joy'
+      name: 'joystick_handler'
+      params:
+        -
+          from: "$(find-pkg-share robot_controller)/config/joystick.yaml"

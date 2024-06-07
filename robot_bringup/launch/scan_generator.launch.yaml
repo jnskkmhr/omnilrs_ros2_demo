@@ -1,0 +1,15 @@
+launch:
+  - node:
+    pkg: 'depthimage_to_laserscan'
+    exec: 'depthimage_to_laserscan_node'
+    name: 'depthimage_to_laserscan'
+    params:
+      -
+        from: "$(find-pkg-share robot_bringup)/config/scan_generator.yaml"
+    remap:
+      -
+          from: "depth"
+          to: "/camera/depth/image_rect_raw"
+      -
+          from: "depth"
+          to: "/camera/depth/camera_info"

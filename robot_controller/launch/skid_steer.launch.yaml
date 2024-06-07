@@ -1,0 +1,8 @@
+launch:
+  - node: 
+    pkg: 'robot_controller'
+    exec: 'diff_controller'
+    name: 'diff_controller'
+    params:
+      -
+        from: "$(find-pkg-share robot_controller)/config/skid_steer.yaml"
