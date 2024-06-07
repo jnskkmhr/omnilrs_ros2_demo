@@ -27,6 +27,11 @@ RUN echo "deb [signed-by=/etc/apt/keyrings/librealsense.pgp] https://librealsens
 RUN apt-get update && apt-get install -y librealsense2-dkms librealsense2-utils librealsense2-dev librealsense2-dbg
 RUN apt-get install -y ros-humble-realsense2-*
 
+# Install image compression package
+RUN apt-get install -y \
+ros-${ROS_DISTRO}-image-transport \
+ros-${ROS_DISTRO}-image-transport-plugins
+
 # Install nav2 and slamtoolbox
 RUN sudo apt install -y \
 ros-${ROS_DISTRO}-navigation2 \
@@ -35,11 +40,14 @@ ros-${ROS_DISTRO}-slam-toolbox
 
 # Build packages from source
 WORKDIR /thirdparty/ros2_ws/src
-RUN git https://github.com/ros-perception/depthimage_to_laserscan.git -b ros2
+RUN git clone https://github.com/ros-perception/depthimage_to_laserscan.git -b ros2
 WORKDIR /thirdparty/ros2_ws
 RUN /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.sh && \
 colcon build --symlink-install --packages-select \
 depthimage_to_laserscan"
+
+# Install foxglove bridge
+RUN apt install -y ros-$ROS_DISTRO-foxglove-bridge
 
 WORKDIR /ros2_ws
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> /root/.bashrc
