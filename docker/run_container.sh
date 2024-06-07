@@ -9,6 +9,5 @@ docker run -it --rm --privileged \
 -v $HOME/.Xauthority:/root/.Xauthority \
 -v /dev/:/dev/ \
 -v $HOME/ros2_ws:/ros2_ws \
---net host \
 --name $NAME \
 $IMAGE

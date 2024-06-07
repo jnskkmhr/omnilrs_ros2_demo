@@ -1,26 +1,27 @@
 launch:
   - node: 
-    pkg: slam_toolbox
-    exec: async_slam_toolbox_node
-    param:
-      -
-        from: "$(find-pkg-share robot_bringup)/config/slam.yaml"
-      -
-        name: "use_sim_time"
-        value: false
-    remap:
-      -
-          from: "/tf"
-          to: "tf"
-      -
-          from: "/tf_static"
-          to: "tf_static"
-      -
-          from: "/scan"
-          to: "scan"
-      -
-          from: "/map"
-          to: "map"
-      -
-          from: "/map_metadata"
-          to: "map_metadata"
+      pkg: slam_toolbox
+      exec: async_slam_toolbox_node
+      name: slam_toolbox
+      param:
+        -
+          from: "$(find-pkg-share robot_bringup)/config/slam.yaml"
+        -
+          name: "use_sim_time"
+          value: false
+      remap:
+        -
+            from: "/tf"
+            to: "tf"
+        -
+            from: "/tf_static"
+            to: "tf_static"
+        -
+            from: "/scan"
+            to: "scan"
+        -
+            from: "/map"
+            to: "map"
+        -
+            from: "/map_metadata"
+            to: "map_metadata"
