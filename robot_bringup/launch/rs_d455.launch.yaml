@@ -8,6 +8,12 @@ launch:
         -
           name: 'camera_namespace'
           value: 'd455'
+        -
+          name: 'enable_infra1'
+          value: 'true'
+        -
+          name: 'enable_infra2'
+          value: 'true'
   
-  - executable
-    cmd: "ros2 param set /d455/d455 depth_module.emitter_enabled 0"
+  - executable:
+      cmd: "ros2 param set /d455/d455 depth_module.emitter_enabled 0"

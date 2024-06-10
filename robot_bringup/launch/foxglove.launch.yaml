@@ -1,0 +1,10 @@
+launch:
+  - include:
+      file: "$(find-pkg-share foxglove_bridge)/launch/foxglove_bridge_launch.xml"
+      arg: 
+        -
+          name: 'port'
+          value: '8765'
+        -
+          name: 'send_buffer_limit'
+          value: '500000000'
