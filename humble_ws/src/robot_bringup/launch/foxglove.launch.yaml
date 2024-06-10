@@ -7,4 +7,4 @@ launch:
           value: '8765'
         -
           name: 'send_buffer_limit'
-          value: '500000000'
+          value: '50000000000'

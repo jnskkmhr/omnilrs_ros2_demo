@@ -14,6 +14,9 @@ launch:
         -
           name: 'enable_infra2'
           value: 'true'
+        # -
+        #   name: 'serial_no'
+        #   value: '053122250694'
   
   - executable:
       cmd: "ros2 param set /d455/d455 depth_module.emitter_enabled 0"

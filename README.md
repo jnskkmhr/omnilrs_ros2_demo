@@ -35,4 +35,8 @@ cd ros2_ws
 source install/setup.bash
 ```
 
-## System diagram (WIP)
+## System diagram
+Documentation WIP
+
+## Usage
+Documentation WIP

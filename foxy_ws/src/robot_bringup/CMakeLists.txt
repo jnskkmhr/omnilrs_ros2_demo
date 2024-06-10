@@ -18,8 +18,6 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(realsense2_camera REQUIRED)
-find_package(realsense2_camera_msgs REQUIRED)
-find_package(realsense2_description REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
