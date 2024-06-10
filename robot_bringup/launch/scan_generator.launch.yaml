@@ -9,7 +9,7 @@ launch:
       remap:
         -
             from: "depth"
-            to: "/camera/depth/image_rect_raw"
+            to: "/d455/depth/image_rect_raw"
         -
             from: "depth_camera_info"
-            to: "/camera/depth/camera_info"
+            to: "/d455/depth/camera_info"

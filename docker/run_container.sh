@@ -1,7 +1,8 @@
 #!/bin/bash
 xhost +
-IMAGE="moonraker:v1.0"
-NAME="moonraker-container"
+TASK=$1
+IMAGE="moonraker-${TASK}:v1.0"
+NAME="moonraker-${TASK}-container"
 docker run -it --rm --privileged \
 -e "ACCEPT_EULA=Y" \
 -e DISPLAY \
@@ -10,4 +11,5 @@ docker run -it --rm --privileged \
 -v /dev/:/dev/ \
 -v $HOME/ros2_ws:/ros2_ws \
 --name $NAME \
+--net host \
 $IMAGE

@@ -1,0 +1,13 @@
+launch:
+  - include:
+      file: "$(find-pkg-share realsense2_camera)/launch/rs_launch.py"
+      arg:
+        -
+          name: 'camera_name'
+          value: 'd455'
+        -
+          name: 'camera_namespace'
+          value: 'd455'
+  
+  - executable
+    cmd: "ros2 param set /d455/d455 depth_module.emitter_enabled 0"

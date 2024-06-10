@@ -1,9 +1,0 @@
-camera:
-  ros__parameters:
-    camera_name: 'camera'
-    enable_color: true 
-    enable_depth: true
-    pointcloud.enable: true
-    align_depth.enable: true
-    enable_infra1: true
-    enable_infra2: true

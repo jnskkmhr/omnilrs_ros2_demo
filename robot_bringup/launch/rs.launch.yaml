@@ -1,7 +1,0 @@
-launch:
-  - include:
-      file: "$(find-pkg-share realsense2_camera)/launch/rs_launch.py"
-      arg:
-        -
-          name: 'config_file'
-          value: '$(find-pkg-share robot_bringup)/config/rs_rgbd.yaml'

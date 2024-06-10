@@ -1,0 +1,11 @@
+launch:
+  - include:
+      file: "$(find-pkg-share realsense2_camera)/launch/rs_launch.py"
+      arg:
+        -
+          name: 'camera_name'
+          value: 't265'
+      remap:
+        -
+          from: "camera/pose"
+          to: "odometry"
