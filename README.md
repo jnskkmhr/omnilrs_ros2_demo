@@ -8,7 +8,6 @@ maintainer: Junnosuke Kamohara
 ## Git maintenance rule
 - Always put the stable code in `main` branch
 - If you want to add any features, create `feature` branch and merge it to `main` later
-- If you fixed the bug and want to update, make `devel/bug` branch and merge it with `main` branch
 - Send pull request before merge to main branch (I added branch rule, so you cannot directly merge with main branch.)
 - Only upload source code and configuration files (no heavy data!)
 
@@ -19,20 +18,80 @@ The repository depends on
 - Host PC (Either ROS2 foxy or humble to communicate with robot computer)
 
 ## Setup package
-Clone this repoo
+In this project, we use docker for easy deployment.  
+You need internet in this setup.
+
+First, clone this repository under your home directory. 
 ```bash
-mkdir -p ros2_ws/src
-cd ros2_ws/src
-git clone --recursive git@github.com:Space-Robotics-Laboratory/rover_moonraker.git
-rosdep install --from-paths src -i
+git clone git@github.com:Space-Robotics-Laboratory/rover_moonraker.git
+```
+
+### Build docker images
+Then, build docker images
+
+
+(perception image)
+```bash
+cd rover_moonraker
+./docker/build_image.sh perception
+```
+
+(navigation image)
+```bash
+cd rover_moonraker
+./docker/build_image.sh navigation
+```
+
+(micro-ros image)
+```bash
+docker pull microros/micro-ros-agent:humble
+```
+
+### Build ros packages
+(perception)
+```bash
+cd rover_moonraker
+./docker/run_container.sh perception
+```
+Then, inside container shell
+```bash
 colcon build --symlink-install
 ```
 
-## Sorce your workspace
-Before you run, make sure you source the workspace where you built this package.
+(navigation)
 ```bash
-cd ros2_ws
-source install/setup.bash
+cd rover_moonraker
+./docker/run_container.sh navigation
+```
+Then, inside container shell
+```bash
+colcon build --symlink-install
+```
+
+
+## Run
+
+(micro-ros)
+```bash
+./docker/run_container.sh micro-ros
+```
+
+(perception)
+```bash
+./docker/run_container.sh perception
+```
+Then, inside container shell, run
+```bash
+/docker/foxy_startup.sh
+```
+
+(navigation)
+```bash
+./docker/run_container.sh navigation
+```
+Then, inside container shell, run
+```bash
+/docker/humble_startup.sh
 ```
 
 ## System diagram

@@ -1,5 +1,4 @@
 #!/bin/bash
-xhost +
 TASK=$1
 IMAGE="moonraker-${TASK}:v1.0"
 NAME="moonraker-${TASK}-container"
@@ -12,6 +11,7 @@ if [ $TASK = "perception" ]; then
                     -e "PRIVACY_CONSENT=Y" \
                     -v $HOME/.Xauthority:/root/.Xauthority \
                     -v /dev/:/dev/ \
+                    -v $HOME/rover_moonraker/docker:/docker \
                     -v $HOME/rover_moonraker/${ROS_VERSION}_ws:/ros2_ws \
                     --name $NAME \
                     $IMAGE"
@@ -23,12 +23,17 @@ elif [ $TASK = "navigation" ]; then
                     -e "PRIVACY_CONSENT=Y" \
                     -v $HOME/.Xauthority:/root/.Xauthority \
                     -v /dev/:/dev/ \
+                    -v $HOME/rover_moonraker/docker:/docker \
                     -v $HOME/rover_moonraker/${ROS_VERSION}_ws:/ros2_ws \
                     -p 8765:8765 \
                     --name $NAME \
                     $IMAGE"
+elif [ $TASK = "micro-ros" ]; then
+    DOCKER_RUN_CMD="docker run -it --rm -v /dev:/dev --privileged \
+                    --net=host microros/micro-ros-agent:humble \
+                    serial --dev /dev/ttyUSB0 -v6"
 else
-    echo "WRONG TASK"
+    echo "Specified task does not exist..."
     exit 0
 fi
 
