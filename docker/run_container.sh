@@ -14,6 +14,7 @@ if [ $TASK = "perception" ]; then
                     -v $HOME/rover_moonraker/docker:/docker \
                     -v $HOME/rover_moonraker/${ROS_VERSION}_ws:/ros2_ws \
                     --name $NAME \
+		    --net host \
                     $IMAGE"
 elif [ $TASK = "navigation" ]; then
     ROS_VERSION="humble"
@@ -27,6 +28,7 @@ elif [ $TASK = "navigation" ]; then
                     -v $HOME/rover_moonraker/${ROS_VERSION}_ws:/ros2_ws \
                     -p 8765:8765 \
                     --name $NAME \
+		    --net host \
                     $IMAGE"
 elif [ $TASK = "micro-ros" ]; then
     DOCKER_RUN_CMD="docker run -it --rm -v /dev:/dev --privileged \

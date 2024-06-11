@@ -1,6 +1,5 @@
 slam_toolbox:
   ros__parameters:
-
     # Plugin params
     solver_plugin: solver_plugins::CeresSolver
     ceres_linear_solver: SPARSE_NORMAL_CHOLESKY

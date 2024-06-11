@@ -10,10 +10,10 @@ launch:
           value: 'd455'
         -
           name: 'enable_infra1'
-          value: 'true'
+          value: 'false'
         -
           name: 'enable_infra2'
-          value: 'true'
+          value: 'false'
         # -
         #   name: 'serial_no'
         #   value: '053122250694'

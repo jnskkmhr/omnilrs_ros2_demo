@@ -3,12 +3,15 @@ launch:
       pkg: slam_toolbox
       exec: async_slam_toolbox_node
       name: slam_toolbox
-      param:
+      param: "$(find-pkg-share robot_bringup)/config/slam.yaml"
         -
           from: "$(find-pkg-share robot_bringup)/config/slam.yaml"
         -
           name: "use_sim_time"
           value: false
+        -
+          name: "use_lifecycle_manager"
+          value: true
       remap:
         -
             from: "/tf"

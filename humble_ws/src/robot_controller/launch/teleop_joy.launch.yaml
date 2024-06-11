@@ -8,6 +8,6 @@ launch:
       pkg: 'robot_controller'
       exec: 'teleop_joy'
       name: 'joystick_handler'
-      params:
+      param:
         -
           from: "$(find-pkg-share robot_controller)/config/joystick.yaml"
