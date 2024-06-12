@@ -30,7 +30,7 @@ ros-${ROS_DISTRO}-image-transport-plugins
 
 WORKDIR /ros2_ws
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> /root/.bashrc
-ENV ROS_DOMAIN_ID 1
+# ENV ROS_DOMAIN_ID 1
 
 ENTRYPOINT ["/ros_entrypoint.sh"]
 CMD ["bash"]

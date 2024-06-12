@@ -55,7 +55,7 @@ RUN apt install -y ros-$ROS_DISTRO-foxglove-bridge
 WORKDIR /ros2_ws
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> /root/.bashrc
 RUN echo "source /thirdparty/ros2_ws/install/setup.bash" >> /root/.bashrc
-ENV ROS_DOMAIN_ID 1
+# ENV ROS_DOMAIN_ID 1
 
 ENTRYPOINT ["/ros_entrypoint.sh"]
 CMD ["bash"]
