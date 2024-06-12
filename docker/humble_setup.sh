@@ -2,8 +2,7 @@
 
 command0="ros2 launch robot_controller skid_steer.launch.yaml"
 command1="ros2 launch robot_bringup foxglove.launch.yaml"
-command2="ros2 launch robot_bringup rs_d455.launch.yaml"
-command3="ros2 launch robot_bringup scan_generator.launch.yaml"
+command2="ros2 launch robot_bringup hokuyo.launch.yaml"
 command4="ros2 launch robot_bringup static_tf.launch.yaml"
 
 # first source ros2 workspace

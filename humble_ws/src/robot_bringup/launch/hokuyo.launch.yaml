@@ -1,0 +1,3 @@
+launch:
+  - include:
+      file: "$(find-pkg-share urg_node2)/launch/urg_node2.launch.py"

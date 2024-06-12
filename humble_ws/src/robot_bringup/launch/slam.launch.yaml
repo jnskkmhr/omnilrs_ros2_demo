@@ -3,7 +3,7 @@ launch:
       pkg: slam_toolbox
       exec: async_slam_toolbox_node
       name: slam_toolbox
-      param: "$(find-pkg-share robot_bringup)/config/slam.yaml"
+      param:
         -
           from: "$(find-pkg-share robot_bringup)/config/slam.yaml"
         -

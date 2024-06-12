@@ -23,6 +23,7 @@ find_package(realsense2_description REQUIRED)
 find_package(slam_toolbox REQUIRED)
 find_package(nav2_bringup REQUIRED)
 find_package(depthimage_to_laserscan REQUIRED)
+find_package(urg_node2 REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

@@ -1,5 +1,5 @@
 launch:
   - executable:
-      cmd: "ros2 run tf2_ros static_transform_publisher 0 0 -0.1 0 0 0 t265_link d455_link"
+      cmd: "ros2 run tf2_ros static_transform_publisher -0.3 0.0 0.0 0.0 0.0 -0.174 t265_link laser"
   - executable:
-      cmd: "ros2 run tf2_ros static_transform_publisher 0 0 0 0 0 0 d455_link base_link"
+      cmd: "ros2 run tf2_ros static_transform_publisher 0.1 0.0 -0.1 0.0 0.0 0.0 laser base_link"
