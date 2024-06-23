@@ -1,9 +1,7 @@
-# Moonraker Rover software stack
-
-<img src="docs/media/moonraker.jpg"></img>
+# Moonraker software stack for simulation
 
 Moonraker project with ROS2 Humble \
-maintainer: Junnosuke Kamohara
+Contributor: Junnosuke Kamohara
 
 ## Git maintenance rule
 - Always put the stable code in `main` branch
@@ -13,9 +11,8 @@ maintainer: Junnosuke Kamohara
 
 ## Environment
 The repository depends on
-- Robot computer: NUC13 (Ubuntu 22.04, ROS2 Humble)
-- Micro controller: ESP32 (micro-ros-arduino for Humble)
-- Host PC (Either ROS2 foxy or humble to communicate with robot computer)
+- Host computer running simulation (we use IsaacSim)
+- Host computer running software stack in this repository
 
 ## Setup package
 In this project, we use docker for easy deployment.  
@@ -23,75 +20,35 @@ You need internet in this setup.
 
 First, clone this repository under your home directory. 
 ```bash
-git clone git@github.com:Space-Robotics-Laboratory/rover_moonraker.git
+git clone git@github.com:Space-Robotics-Laboratory/rover_moonraker.git -b sim
 ```
 
-### Build docker images
-Then, build docker images
+### Build docker images and ros2 packages
+Then, build docker images and ros2 package
 
-
-(perception image)
 ```bash
 cd rover_moonraker
-./docker/build_image.sh perception
+./docker/build_image.sh
 ```
 
-(navigation image)
 ```bash
 cd rover_moonraker
-./docker/build_image.sh navigation
-```
+./docker/run_container.sh
 
-(micro-ros image)
-```bash
-docker pull microros/micro-ros-agent:humble
-```
-
-### Build ros packages
-(perception)
-```bash
-cd rover_moonraker
-./docker/run_container.sh perception
-```
-Then, inside container shell
-```bash
-colcon build --symlink-install
-```
-
-(navigation)
-```bash
-cd rover_moonraker
-./docker/run_container.sh navigation
-```
-Then, inside container shell
-```bash
+# then build package
 colcon build --symlink-install
 ```
 
 
 ## Run
 
-(micro-ros)
 ```bash
-./docker/run_container.sh micro-ros
-```
-
-(perception)
-```bash
-./docker/run_container.sh perception
+./docker/run_container.sh
 ```
 Then, inside container shell, run
 ```bash
-/docker/foxy_startup.sh
-```
-
-(navigation)
-```bash
-./docker/run_container.sh navigation
-```
-Then, inside container shell, run
-```bash
-/docker/humble_startup.sh
+# one-liner script to run slam and navigation 
+/docker/humble_navigation.sh
 ```
 
 ## System diagram

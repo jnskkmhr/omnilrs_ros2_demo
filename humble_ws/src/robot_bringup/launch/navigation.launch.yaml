@@ -7,4 +7,4 @@ launch:
           value: '$(find-pkg-share robot_bringup)/config/nav2.yaml'
         -
           name: "use_sim_time"
-          value: 'false'
+          value: 'true'
