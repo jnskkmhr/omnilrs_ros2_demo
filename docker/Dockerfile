@@ -20,20 +20,6 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
 
-# Install RealSense ROS2 (Including librealsense2)
-RUN mkdir -p /etc/apt/keyrings && curl -sSf https://librealsense.intel.com/Debian/librealsense.pgp | sudo tee /etc/apt/keyrings/librealsense.pgp > /dev/null
-RUN apt-get update && apt-get install -y apt-transport-https
-RUN echo "deb [signed-by=/etc/apt/keyrings/librealsense.pgp] https://librealsense.intel.com/Debian/apt-repo `lsb_release -cs` main" | tee /etc/apt/sources.list.d/librealsense.list
-RUN apt-get update && apt-get install -y librealsense2-dkms librealsense2-utils librealsense2-dev librealsense2-dbg
-RUN apt-get install -y ros-humble-realsense2-*
-
-# Install image compression package and hokuyo dependencies
-RUN apt-get update && \
-apt-get install -y \
-ros-${ROS_DISTRO}-image-transport \
-ros-${ROS_DISTRO}-image-transport-plugins \
-ros-${ROS_DISTRO}-laser-proc
-
 # Install nav2 and slamtoolbox
 RUN sudo apt install -y \
 ros-${ROS_DISTRO}-navigation2 \
@@ -43,8 +29,7 @@ ros-${ROS_DISTRO}-slam-toolbox
 # Build other thirdparty packages from source
 WORKDIR /thirdparty/ros2_ws/src
 RUN git clone https://github.com/ros-perception/depthimage_to_laserscan.git -b ros2
-RUN git clone --recursive https://github.com/jnskkmhr/urg_node2.git
-RUN rosdep update && rosdep install -i --from-paths urg_node2
+RUN git clone https://github.com/ros-perception/pointcloud_to_laserscan.git -b humble
 WORKDIR /thirdparty/ros2_ws
 RUN /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.sh && \
 colcon build --symlink-install"
@@ -55,7 +40,6 @@ RUN apt install -y ros-$ROS_DISTRO-foxglove-bridge
 WORKDIR /ros2_ws
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> /root/.bashrc
 RUN echo "source /thirdparty/ros2_ws/install/setup.bash" >> /root/.bashrc
-# ENV ROS_DOMAIN_ID 1
 
 ENTRYPOINT ["/ros_entrypoint.sh"]
 CMD ["bash"]
