@@ -1,38 +1,23 @@
-# Moonraker software stack for simulation
+# ROS2 docker for the OmniLRS demo
 
-Moonraker project with ROS2 Humble \
-Contributor: Junnosuke Kamohara
-
-## Git maintenance rule
-- Always put the stable code in `main` branch
-- If you want to add any features, create `feature` branch and merge it to `main` later
-- Send pull request before merge to main branch (I added branch rule, so you cannot directly merge with main branch.)
-- Only upload source code and configuration files (no heavy data!)
-
-## Environment
-The repository depends on
-- Host computer running simulation (we use IsaacSim)
-- Host computer running software stack in this repository
-
-## Setup package
-In this project, we use docker for easy deployment.  
-You need internet in this setup.
+ROS2 humble container to run OmniLRS demo.\
+In this project, we use docker for easy development.
 
 First, clone this repository under your home directory. 
 ```bash
-git clone git@github.com:Space-Robotics-Laboratory/rover_moonraker.git -b sim
+git clone git@github.com:jnskkmhr/omnilrs_ros2_demo.git
 ```
 
 ### Build docker images and ros2 packages
 Then, build docker images and ros2 package
 
 ```bash
-cd rover_moonraker
+cd omnilrs_ros2_demo
 ./docker/build_image.sh
 ```
 
 ```bash
-cd rover_moonraker
+cd omnilrs_ros2_demo
 ./docker/run_container.sh
 
 # then build package
@@ -42,17 +27,17 @@ colcon build --symlink-install
 
 ## Run
 
+### joystick teleoperation
+Inside container shell, run
 ```bash
-./docker/run_container.sh
+ros2 launch robot_controller teleop_joy.launch.yaml
 ```
-Then, inside container shell, run
+If you want to change the max speed, please change parameters in [joystick.yaml](humble_ws/src/robot_controller/launch/teleop_joy.launch.yaml)
+
+### navigation
+
+Inside container shell, run
 ```bash
 # one-liner script to run slam and navigation 
 /docker/humble_navigation.sh
 ```
-
-## System diagram
-Documentation WIP
-
-## Usage
-Documentation WIP
