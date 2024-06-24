@@ -21,7 +21,7 @@ RUN apt-get update && \
     apt-get clean
 
 # Install nav2 and slamtoolbox
-RUN sudo apt install -y \
+RUN apt-get update && apt-get install -y \
 ros-${ROS_DISTRO}-navigation2 \
 ros-${ROS_DISTRO}-nav2-bringup \
 ros-${ROS_DISTRO}-slam-toolbox
