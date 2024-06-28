@@ -13,8 +13,16 @@ RUN apt-get update && \
         wget \
         unzip \
         libeigen3-dev \
-        python3-colcon-common-extensions \
+        libspdlog-dev \
+        libsuitesparse-dev \
+        qtdeclarative5-dev \
+        qt5-qmake \
+        libqglviewer-dev-qt5 \
         libopencv-dev \
+        libpcl-dev \
+        libomp-dev \
+        libpcl-conversions-dev \
+        python3-colcon-common-extensions \
         ros-$ROS_DISTRO-joy-linux \
         ros-$ROS_DISTRO-image-geometry && \
     rm -rf /var/lib/apt/lists/* && \
@@ -26,16 +34,25 @@ ros-${ROS_DISTRO}-navigation2 \
 ros-${ROS_DISTRO}-nav2-bringup \
 ros-${ROS_DISTRO}-slam-toolbox
 
-# Build other thirdparty packages from source
-WORKDIR /thirdparty/ros2_ws/src
-RUN git clone https://github.com/ros-perception/depthimage_to_laserscan.git -b ros2
-RUN git clone https://github.com/ros-perception/pointcloud_to_laserscan.git -b humble
-WORKDIR /thirdparty/ros2_ws
-RUN /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.sh && \
-colcon build --symlink-install"
-
 # Install foxglove bridge
 RUN apt install -y ros-$ROS_DISTRO-foxglove-bridge
+
+# Build other thirdparty packages from source
+
+# g2o
+WORKDIR /thirdparty
+RUN git clone https://github.com/RainerKuemmerle/g2o.git
+WORKDIR /thirdparty/g2o
+RUN mkdir build && \
+cd build && cmake .. && \
+make && make install
+
+# lidarslam_ros2
+WORKDIR /thirdparty/ros2_ws/src
+RUN git clone --recursive https://github.com/rsasaki0109/lidarslam_ros2.git
+WORKDIR /thirdparty/ros2_ws
+RUN /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.sh && \
+colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release"
 
 WORKDIR /ros2_ws
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> /root/.bashrc

@@ -1,0 +1,5 @@
+launch:
+  - node:
+      pkg: pc_converter
+      exec: pc_converter
+      name: pc_converter
