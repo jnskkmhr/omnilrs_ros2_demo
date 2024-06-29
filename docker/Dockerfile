@@ -20,13 +20,15 @@ RUN apt-get update && \
         libqglviewer-dev-qt5 \
         libopencv-dev \
         libpcl-dev \
-        libomp-dev \
         libpcl-conversions-dev \
+        libomp-dev \
         python3-colcon-common-extensions \
         ros-$ROS_DISTRO-joy-linux \
         ros-$ROS_DISTRO-image-geometry && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
+
+RUN apt-get update && apt-get install -y ros-$ROS_DISTRO-pcl-*
 
 # Install nav2 and slamtoolbox
 RUN apt-get update && apt-get install -y \
@@ -47,9 +49,10 @@ RUN mkdir build && \
 cd build && cmake .. && \
 make && make install
 
-# lidarslam_ros2
+# lidarslam_ros2 and pointcloud_to_grid
 WORKDIR /thirdparty/ros2_ws/src
 RUN git clone --recursive https://github.com/rsasaki0109/lidarslam_ros2.git
+RUN git clone https://github.com/jkk-research/pointcloud_to_grid -b ros2
 WORKDIR /thirdparty/ros2_ws
 RUN /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.sh && \
 colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release"
