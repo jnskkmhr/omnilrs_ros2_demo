@@ -19,8 +19,6 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(slam_toolbox REQUIRED)
 find_package(nav2_bringup REQUIRED)
-find_package(scanmatcher REQUIRED)
-find_package(graph_based_slam REQUIRED)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -34,6 +32,11 @@ install(DIRECTORY launch
 
 # Install config files
 install(DIRECTORY config 
+        DESTINATION share/${PROJECT_NAME}
+)
+
+# Install maps files
+install(DIRECTORY maps 
         DESTINATION share/${PROJECT_NAME}
 )
 

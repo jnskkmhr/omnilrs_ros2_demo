@@ -4,7 +4,7 @@ launch:
       arg: 
         -
           name: 'params_file'
-          value: '$(find-pkg-share robot_bringup)/config/nav2_mppi.yaml'
+          value: '$(find-pkg-share robot_bringup)/config/nav2_mppi_vlp16.yaml'
         -
           name: "use_sim_time"
           value: 'true'

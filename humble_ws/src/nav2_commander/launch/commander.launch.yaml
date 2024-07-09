@@ -1,0 +1,12 @@
+launch:
+  - node: 
+      pkg: nav2_commander
+      exec: run_commander
+      name: nav2_commander
+      param:
+        -
+          name: use_localizer
+          value: False
+        -
+          name: use_slam
+          value: True

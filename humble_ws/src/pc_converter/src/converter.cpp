@@ -42,7 +42,7 @@ class Converter : public rclcpp::Node
 Converter::Converter(std::string node_name) : Node(node_name)
 {
     subPC_ = this->create_subscription<sensor_msgs::msg::PointCloud2>("/pointcloud", 10, std::bind(&Converter::lidar_handle, this, std::placeholders::_1));
-    pubPC_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/velodyne_point", 10);
+    pubPC_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("/velodyne_points", 10);
 }
 
 void Converter::lidar_handle(const sensor_msgs::msg::PointCloud2::SharedPtr pc_msg)

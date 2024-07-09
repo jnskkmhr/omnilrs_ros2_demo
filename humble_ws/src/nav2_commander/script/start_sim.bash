@@ -1,0 +1,1 @@
+ros2 launch turtlebot4_ignition_bringup turtlebot4_ignition.launch.py nav2:=true slam:=false localization:=true rviz:=true model:=lite world:=maze map:=/opt/ros/humble/share/turtlebot4_navigation/maps/maze.yaml

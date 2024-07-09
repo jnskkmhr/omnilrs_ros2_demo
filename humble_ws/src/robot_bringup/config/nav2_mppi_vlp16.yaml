@@ -144,7 +144,7 @@ controller_server:
       vy_std: 0.2
       wz_std: 0.4
       vx_max: 0.5
-      vx_min: -0.35
+      vx_min: 0.0
       vy_max: 0.5
       wz_max: 1.9
       iteration_count: 1
@@ -247,13 +247,13 @@ local_costmap:
         z_voxels: 16
         max_obstacle_height: 2.0
         mark_threshold: 0
-        observation_sources: scan
-        scan:
-          topic: /scan
+        observation_sources: pcd
+        pcd:
+          topic: /velodyne_points
           max_obstacle_height: 2.0
           clearing: True
           marking: True
-          data_type: "LaserScan"
+          data_type: "PointCloud2"
           raytrace_max_range: 3.0
           raytrace_min_range: 0.0
           obstacle_max_range: 2.5
@@ -274,8 +274,8 @@ global_costmap:
       robot_radius: 0.3556
       resolution: 0.05
       track_unknown_space: true
-      # plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
-      plugins: ["obstacle_layer", "inflation_layer"]
+      plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
+      # plugins: ["obstacle_layer", "inflation_layer"]
       obstacle_layer:
         plugin: "nav2_costmap_2d::ObstacleLayer"
         enabled: True
@@ -285,10 +285,10 @@ global_costmap:
           max_obstacle_height: 2.0
           clearing: True
           marking: True
-          data_type: "LaserScan"
-          raytrace_max_range: 3.0
+          data_type: "PointCloud2"
+          raytrace_max_range: 10.0
           raytrace_min_range: 0.0
-          obstacle_max_range: 2.5
+          obstacle_max_range: 8.5
           obstacle_min_range: 0.0
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
@@ -302,9 +302,7 @@ global_costmap:
 map_server:
   ros__parameters:
     use_sim_time: True
-    # Overridden in launch by the "map" launch configuration or provided default value.
-    # To use in yaml, remove the default "map" value in the tb3_simulation_launch.py file & provide full path to map below.
-    yaml_filename: ""
+    yaml_filename: "/home/lunar6/junnosuke/omnilrs_ros2_demo/humble_ws/src/robot_bringup/maps/lro_dtm.yaml"
 
 map_saver:
   ros__parameters:

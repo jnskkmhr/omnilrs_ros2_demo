@@ -34,25 +34,40 @@ RUN apt-get update && apt-get install -y ros-$ROS_DISTRO-pcl-*
 RUN apt-get update && apt-get install -y \
 ros-${ROS_DISTRO}-navigation2 \
 ros-${ROS_DISTRO}-nav2-bringup \
-ros-${ROS_DISTRO}-slam-toolbox
+ros-${ROS_DISTRO}-slam-toolbox \
+ros-${ROS_DISTRO}-spatio-temporal-voxel-layer
 
 # Install foxglove bridge
 RUN apt install -y ros-$ROS_DISTRO-foxglove-bridge
 
 # Build other thirdparty packages from source
 
-# g2o
-WORKDIR /thirdparty
-RUN git clone https://github.com/RainerKuemmerle/g2o.git
-WORKDIR /thirdparty/g2o
-RUN mkdir build && \
-cd build && cmake .. && \
-make && make install
+# # g2o
+# WORKDIR /thirdparty
+# RUN git clone https://github.com/RainerKuemmerle/g2o.git
+# WORKDIR /thirdparty/g2o
+# RUN mkdir build && \
+# cd build && cmake .. && \
+# make && make install
 
-# lidarslam_ros2 and pointcloud_to_grid
+# octomap
+WORKDIR /thirdparty
+RUN wget --no-check-certificate https://github.com/OctoMap/octomap/archive/refs/tags/v1.10.0.zip -O octomap.zip && \
+    unzip octomap.zip && \
+    mv octomap-1.10.0 octomap && \
+    rm octomap.zip
+RUN cd octomap && \
+    mkdir build && \
+    cd build && \
+    cmake .. && \
+    make && \
+    make install
+
+# lidarslam_ros2 and octomap_server2
 WORKDIR /thirdparty/ros2_ws/src
-RUN git clone --recursive https://github.com/rsasaki0109/lidarslam_ros2.git
-RUN git clone https://github.com/jkk-research/pointcloud_to_grid -b ros2
+# RUN git clone --recursive https://github.com/rsasaki0109/lidarslam_ros2.git
+RUN git clone https://github.com/jnskkmhr/octomap_server2.git
+RUN cd octomap_server2 && vcs import . < deps.repos
 WORKDIR /thirdparty/ros2_ws
 RUN /bin/bash -c "source /opt/ros/${ROS_DISTRO}/setup.sh && \
 colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release"
