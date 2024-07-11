@@ -10,14 +10,38 @@ __status__ = "development"
 import rclpy
 from threading import Thread
 
-from .src.data_type import StampedPose
-from .src.navigation_ros_wrapper import Navigator_ToPose
-from .parameter_node import ParameterNode
-from .goal_pose_publisher import GoalPosePublisher
+from src.data_type import StampedPose
+from src.navigation_ros_wrapper import Navigator_ToPose
+from parameter_node import ParameterNode
+from goal_pose_publisher import GoalPosePublisher
+from src.util import yaw2dir
 
-def main()->None:
+import numpy as np
+import argparse
+
+def str2bool(v):
+    if isinstance(v, bool):
+        return v
+    if v.lower() in ('yes', 'true', 'True', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'False', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
+def main(moon_coordinates, path_to_execute)->None:
     """
-    Main function to run the commander."""
+    Main function to run the navigation
+
+    Args:
+    moon_coordinates (str): Coordinates that represent a certain moon image. Format: "coord1_coord2"
+    path_to_execute (str): Path to execute. Options: "interpolated_dikstra_path.npy", "interpolated_astar_path.npy"
+
+    Returns:
+    None
+    """
+
+    # Initialize the node
     rclpy.init()
     parameter_node = ParameterNode("parameter_node")
 
@@ -26,18 +50,11 @@ def main()->None:
     use_slam = parameter_node._get_param("use_slam")
     
     ## setup navigator ##
-    ## WIP: get initial pose from localizer
-    print("here")
-    init_pose = StampedPose(position=[20.0, 20.0], orientation="NORTH")
-    ## WIP: get waypoints from npy file
-    waypoints = [
-        StampedPose(position=[20.0, 20.0], orientation="NORTH"),
-        StampedPose(position=[25.0, 25.0], orientation="NORTH"),
-        StampedPose(position=[30.0, 30.0], orientation="NORTH"),
-        StampedPose(position=[40.0, 40.0], orientation="NORTH"),
-        StampedPose(position=[50.0, 50.0], orientation="NORTH"),
-        StampedPose(position=[60.0, 60.0], orientation="NORTH"),
-    ]
+    original_path = np.load("./{}/{}".format(moon_coordinates, path_to_execute), allow_pickle=True)
+    
+    init_pose = StampedPose(position=[original_path[0][0][0], original_path[0][0][1]], orientation=yaw2dir(original_path[0][1]))
+    waypoints = [StampedPose(position=[waypoint[0][0], waypoint[0][1]], orientation=yaw2dir(waypoint[1]) ) for waypoint in original_path]
+    
     nv = Navigator_ToPose(init_pose=init_pose, use_localizer=use_localizer, use_slam=use_slam)
     nv.register_waypoints(waypoints)
     
@@ -49,4 +66,29 @@ def main()->None:
     rclpy.shutdown()
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description='Execute the navigation')
+    parser.add_argument('--moon_coordinates', type=str, default=None, help='Coordinates that represent a certain moon image. Format: "coord1_coord2"')
+    parser.add_argument('--execute_dijkstra', type=str2bool, default=None, help='Flag to indicate whether to execute dijsktra. If chosen, the astar path will not be executed. If both true, dijsktra will be executed.')
+    parser.add_argument('--execute_astar', type=str2bool, default=None, help='Flag to indicate whether to execute astar. If chosen, the dijsktra path will not be executed. If both true, dijsktra will be executed.')
+
+    args = parser.parse_args()
+
+    moon_coordinates = args.moon_coordinates
+    execute_dijsktra = args.execute_dijkstra
+    execute_astar = args.execute_astar
+
+    if moon_coordinates is None:
+        raise ValueError("Please provide the moon coordinates.")
+    
+    if execute_dijsktra is None and execute_astar is None:
+        raise ValueError("Please provide at least one of the flags to execute dijsktra or astar.")
+    
+    if execute_dijsktra == False and execute_astar == False:
+        raise ValueError("Please provide at least one of the flags to execute dijsktra or astar.")
+    
+    if execute_dijsktra:
+        path_to_execute = "interpolated_dijkstra_path.npy"
+    elif execute_astar:
+        path_to_execute = "interpolated_astar_path.npy"
+
+    main(moon_coordinates, path_to_execute)
