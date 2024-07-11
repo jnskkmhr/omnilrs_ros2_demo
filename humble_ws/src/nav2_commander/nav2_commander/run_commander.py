@@ -27,6 +27,7 @@ def main()->None:
     
     ## setup navigator ##
     ## WIP: get initial pose from localizer
+    print("here")
     init_pose = StampedPose(position=[20.0, 20.0], orientation="NORTH")
     ## WIP: get waypoints from npy file
     waypoints = [
