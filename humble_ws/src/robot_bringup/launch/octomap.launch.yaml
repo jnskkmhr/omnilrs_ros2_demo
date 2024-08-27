@@ -1,7 +1,7 @@
 launch:
   - node: 
-      pkg: octomap_server2
-      exec: octomap_server
+      pkg: octomap_server
+      exec: octomap_server_node
       name: octomap_server
       param:
         -
@@ -10,6 +10,3 @@ launch:
         -
             from: "/cloud_in"
             to: "/velodyne_points"
-        -
-            from: "/map"
-            to: "map"

@@ -1,37 +1,7 @@
-# yaml launch did not work ???? 
 launch:
-  - node:
-      pkg: "nav2_map_server"
-      exec: "map_server"
-      name: "map_server"
-      param:
+  - include:
+      file: "$(find-pkg-share robot_bringup)/launch/map_server.launch.py"
+      arg: 
         -
-          from: "$(find-pkg-share robot_bringup)/config/nav2_mppi_vlp16.yaml"
-        # -
-        #   name: "use_sim_time"
-        #   value: true
-        # -
-        #   name: "yaml_filename"
-        #   value: "/home/lunar6/junnosuke/omnilrs_ros2_demo/humble_ws/src/robot_bringup/maps/lro_dtm.yaml"
-      # remap:
-      #   -
-      #       from: "/tf"
-      #       to: "tf"
-      #   -
-      #       from: "/tf_static"
-      #       to: "tf_static"
-
-  - node: 
-      pkg: nav2_lifecycle_manager
-      exec: lifecycle_manager
-      name: lifecycle_manager
-      param:
-        -
-          name: "use_sim_time"
-          value: true
-        -
-          name: "auto_start"
-          value: true
-        -
-          name: "node_names"
-          value: ["map_server"]
+          name: 'map'
+          value: '$(find-pkg-share robot_bringup)/maps/map_root_0716/map.yaml'
