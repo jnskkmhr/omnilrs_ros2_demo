@@ -6,5 +6,3 @@ humble_ws/install
 humble_ws/log
 humble_ws/build
 isaac_model/.thumbs
-
-humble_ws/src/robot_bringup/maps
