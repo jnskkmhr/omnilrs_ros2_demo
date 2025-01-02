@@ -1,5 +1,5 @@
 FROM osrf/ros:humble-desktop
-ENV ROS_DISTRO humble
+ENV ROS_DISTRO=humble
 
 # Install dependencies
 RUN apt-get update && \
@@ -23,10 +23,18 @@ RUN apt-get update && \
         libpcl-conversions-dev \
         libomp-dev \
         python3-colcon-common-extensions \
+        python3-rosdep \
+        python3-pip \
         ros-$ROS_DISTRO-joy-linux \
         ros-$ROS_DISTRO-image-geometry && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean
+
+# Check if rosdep needs to be initialized
+RUN if [ ! -f "/etc/ros/rosdep/sources.list.d/20-default.list" ]; then \
+        rosdep init; \
+    fi \
+    && rosdep update
 
 RUN apt-get update && apt-get install -y ros-$ROS_DISTRO-pcl-*
 
@@ -41,7 +49,10 @@ ros-${ROS_DISTRO}-spatio-temporal-voxel-layer
 RUN apt install -y ros-$ROS_DISTRO-foxglove-bridge
 
 # Install octomap
-RUN apt-get install -y ros-${ROS_DISTRO}-octomap-mapping
+# RUN apt-get install -y ros-${ROS_DISTRO}-octomap-mapping
+
+COPY requirements.txt /tmp/
+RUN pip3 install -r /tmp/requirements.txts
 
 WORKDIR /ros2_ws
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> /root/.bashrc
