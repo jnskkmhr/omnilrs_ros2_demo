@@ -8,3 +8,4 @@ humble_ws/build
 isaac_model/.thumbs
 
 core.*
+__pycache__*

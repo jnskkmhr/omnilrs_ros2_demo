@@ -16,6 +16,7 @@ import argparse
 import sys
 
 import numpy as np
+import matplotlib
 import rerun as rr  # pip install rerun-sdk
 
 try:
@@ -52,9 +53,9 @@ See: README.md for more details.
     sys.exit(1)
 
 
-class PragyaanSubscriber(Node):  # type: ignore[misc]
+class OmniLRSSubscriber(Node):  # type: ignore[misc]
     def __init__(self) -> None:
-        super().__init__("pragyaan_rover")
+        super().__init__("husky_rover_rerun")
 
         # Used for subscribing to latching topics
         latching_qos = QoSProfile(depth=1, durability=QoSDurabilityPolicy.TRANSIENT_LOCAL)
@@ -68,34 +69,33 @@ class PragyaanSubscriber(Node):  # type: ignore[misc]
 
         # Define a mapping for transforms
         self.path_to_frame = {
-            "world": "world",
-            "world/points": "depth_cam",
+            "world": "odom",
+            "world/points": "vlp6",
             "world/robot": "base_link",
-            "world/robot/depth_camera": "depth_cam",
-            "world/robot/depth_camera/points": "depth_cam",
-            # "world/robot/left_camera": "NavCam_left",
-            # "world/robot/left_camera/points": "camera_depth_frame",
-            # "world/robot/right_camera": "NavCam_right",
-            # "world/robot/right_camera/points": "camera_depth_frame",
+            "world/robot/lidar": "vlp6",
+            "world/robot/camera": "Camera_Pseudo_Depth",
+            "world/robot/lidar/points": "vlp6",
         }
 
         # Assorted helpers for data conversions
         self.model = PinholeCameraModel()
         self.cv_bridge = cv_bridge.CvBridge()
         self.laser_proj = laser_geometry.laser_geometry.LaserProjection()
+        self.cmap = matplotlib.colormaps["turbo_r"]
+        self.norm = matplotlib.colors.Normalize(vmin=3.0, vmax=75.0)
 
         # Log a bounding box as a visual placeholder for the map
         # TODO(jleibs): Log the real map once [#1531](https://github.com/rerun-io/rerun/issues/1531) is merged
-        rr.log(
-            "world/box",
-            rr.Boxes3D(half_sizes=[3, 3, 1], centers=[0, 0, 1], colors=[255, 255, 255, 255]),
-            static=True,
-        )
+        # rr.log(
+        #     "world/box",
+        #     rr.Boxes3D(half_sizes=[3, 3, 1], centers=[0, 0, 1], colors=[255, 255, 255, 255]),
+        #     static=True,
+        # )
 
         # Subscriptions
         self.info_sub = self.create_subscription(
             CameraInfo,
-            "/depth_cam/camera_info",
+            "/front_camera/depth/depth_info",
             self.cam_info_callback,
             10,
             callback_group=self.callback_group,
@@ -103,7 +103,7 @@ class PragyaanSubscriber(Node):  # type: ignore[misc]
 
         self.img_sub = self.create_subscription(
             Image,
-            "/depth_cam/rgb",
+            "/front_camera/mono/rgb",
             self.rgb_image_callback,
             10,
             callback_group=self.callback_group,
@@ -111,7 +111,7 @@ class PragyaanSubscriber(Node):  # type: ignore[misc]
 
         self.depth_img_sub = self.create_subscription(
             Image,
-            "/depth_cam/depth",
+            "/front_camera/depth/depth",
             self.depth_image_callback,
             10,
             callback_group=self.callback_group,
@@ -119,7 +119,7 @@ class PragyaanSubscriber(Node):  # type: ignore[misc]
 
         self.points_sub = self.create_subscription(
             PointCloud2,
-            "/depth_cam/depth_pcl",
+            "/pointcloud",
             self.points_callback,
             10,
             callback_group=self.callback_group,
@@ -127,15 +127,7 @@ class PragyaanSubscriber(Node):  # type: ignore[misc]
 
         self.odom_sub = self.create_subscription(
             Odometry,
-            "odom",
-            self.odom_callback,
-            10,
-            callback_group=self.callback_group,
-        )
-
-        self.odom_sub = self.create_subscription(
-            Odometry,
-            "odom",
+            "/odom",
             self.odom_callback,
             10,
             callback_group=self.callback_group,
@@ -143,20 +135,11 @@ class PragyaanSubscriber(Node):  # type: ignore[misc]
 
         self.imu_sub = self.create_subscription(
             Imu,
-            "imu",
+            "/imu",
             self.imu_callback,
             10,
             callback_group=self.callback_group,
         )
-
-        self.joint_state_sub = self.create_subscription(
-            JointState,
-            "joint_states",
-            self.joint_states_callback,
-            10,
-            callback_group=self.callback_group,
-        )
-
 
     def log_tf_as_transform3d(self, path: str, time: Time) -> None:
         """
@@ -189,9 +172,9 @@ class PragyaanSubscriber(Node):  # type: ignore[misc]
         self.model.fromCameraInfo(info)
 
         rr.log(
-            "world/robot/depth_camera/depth_simg",
+            "world/robot/camera/rgb_img",
             rr.Pinhole(
-                resolution=[self.model.width, self.model.height],
+                resolution=[self.model.width * 2 , self.model.height * 2],
                 image_from_camera=self.model.intrinsicMatrix(),
             ),
         )
@@ -201,35 +184,55 @@ class PragyaanSubscriber(Node):  # type: ignore[misc]
         time = Time.from_msg(img.header.stamp)
         rr.set_time_nanos("ros_time", time.nanoseconds)
 
-        rr.log("world/robot/depth_camera/rgb_img", rr.Image(self.cv_bridge.imgmsg_to_cv2(img)))
-        self.log_tf_as_transform3d("world/robot/depth_camera", time)
+        rr.log("world/robot/camera/rgb_img", rr.Image(self.cv_bridge.imgmsg_to_cv2(img)))
+        self.log_tf_as_transform3d("world/robot/camera", time)
 
     def depth_image_callback(self, img: Image) -> None:
         """Log an `Image` with `log_image` using `cv_bridge`."""
         time = Time.from_msg(img.header.stamp)
         rr.set_time_nanos("ros_time", time.nanoseconds)
 
-        rr.log("world/robot/depth_camera/depth_img", rr.Image(self.cv_bridge.imgmsg_to_cv2(img)))
-        self.log_tf_as_transform3d("world/robot/depth_camera", time)
+        # Convert ROS Image message to NumPy array
+        depth_array = self.cv_bridge.imgmsg_to_cv2(img, desired_encoding="passthrough")
+
+        # Define the region of interest (ROI)
+        min_depth = 0.5  # Minimum depth in meters
+        max_depth = 5.0  # Maximum depth in meters
+
+        # Clip and normalize depth values to the ROI
+        depth_array_clipped = np.clip(depth_array, min_depth, max_depth)
+        depth_normalized = (depth_array_clipped - min_depth) / (max_depth - min_depth)
+
+        # Apply colormap
+        depth_colored = (self.cmap(depth_normalized)[:, :, :3] * 255).astype(np.uint8)
+
+        # Log the colored depth image
+        rr.log("world/robot/camera/depth_img", rr.Image(depth_colored))
+        self.log_tf_as_transform3d("world/robot/camera", time)
+
 
     def points_callback(self, points: PointCloud2) -> None:
         """Log a `PointCloud2` with `log_points`."""
         time = Time.from_msg(points.header.stamp)
         rr.set_time_nanos("ros_time", time.nanoseconds)
 
+        # Read points (x, y, z)
         pts = point_cloud2.read_points(points, field_names=["x", "y", "z"], skip_nans=True)
+        pts = structured_to_unstructured(pts)  # Convert structured array to unstructured
 
-        # Comment or remove the color fields if they're not available
-        # colors = point_cloud2.read_points(points, field_names=["r", "g", "b"], skip_nans=True)
+        # Calculate distances for coloring
+        point_distances = np.linalg.norm(pts, axis=1)
 
-        # colors = point_cloud2.read_points(points, field_names=["r", "g", "b"], skip_nans=True)
+        # Normalize distances to colormap range
+        self.norm = matplotlib.colors.Normalize(vmin=np.min(point_distances), vmax=np.max(point_distances))
+        point_colors = self.cmap(self.norm(point_distances))  # Turbo colormap returns RGBA values
 
-        pts = structured_to_unstructured(pts)
-        # colors = colors = structured_to_unstructured(colors)
+        # Convert colormap output (float) to 8-bit integer for Rerun
+        point_colors = (point_colors[:, :3] * 255).astype(np.uint8)
 
-        # Log only the points if colors are not available
-        rr.log("world/robot/depth_camera/points", rr.Points3D(pts, colors=[255, 0, 0, 255]))
-        self.log_tf_as_transform3d("world/robot/depth_camera/points", time)
+        # Log points with Turbo colors
+        rr.log("world/robot/lidar/points", rr.Points3D(pts, colors=point_colors.tolist()))
+        self.log_tf_as_transform3d("world/robot/lidar/points", time)
 
 
     def odom_callback(self, odom: Odometry) -> None:
@@ -252,40 +255,13 @@ class PragyaanSubscriber(Node):  # type: ignore[misc]
         rr.set_time_nanos("ros_time", time.nanoseconds)
 
         # Capture time-series data for the imu orientation
-        rr.log("imu/orientation/x", rr.Scalar(imu.orientation.x))
-        rr.log("imu/orientation/y", rr.Scalar(imu.orientation.y))
-        rr.log("imu/orientation/z", rr.Scalar(imu.orientation.z))
+        rr.log("imu/linear_acceleration/x", rr.Scalar(imu.linear_acceleration.x))
+        rr.log("imu/linear_acceleration/y", rr.Scalar(imu.linear_acceleration.y))
+        rr.log("imu/linear_acceleration/z", rr.Scalar(imu.linear_acceleration.z))
 
-    def joint_states_callback(self, jointstates: JointState) -> None:
-        """ Log Joint states data"""
-        time = Time.from_msg(jointstates.header.stamp)
-        rr.set_time_nanos("ros_time", time.nanoseconds)
-
-        # Capture time-series data for the joint states
-        ##### Positions #####
-        rr.log("JointPosition/position/wheel_fl", rr.Scalar(jointstates.position[2]))
-        rr.log("JointPosition/position/wheel_fr", rr.Scalar(jointstates.position[4]))
-        rr.log("JointPosition/position/wheel_bl", rr.Scalar(jointstates.position[6]))
-        rr.log("JointPosition/position/wheel_br", rr.Scalar(jointstates.position[9]))
-        rr.log("JointPosition/position/wheel_ml", rr.Scalar(jointstates.position[7]))
-        rr.log("JointPosition/position/wheel_mr", rr.Scalar(jointstates.position[8]))
-
-        ##### Velocities #####
-        rr.log("JointVelocity/velocity/wheel_fl", rr.Scalar(jointstates.velocity[2]))
-        rr.log("JointVelocity/velocity/wheel_fr", rr.Scalar(jointstates.velocity[4]))
-        rr.log("JointVelocity/velocity/wheel_bl", rr.Scalar(jointstates.velocity[6]))
-        rr.log("JointVelocity/velocity/wheel_br", rr.Scalar(jointstates.velocity[9]))
-        rr.log("JointVelocity/velocity/wheel_ml", rr.Scalar(jointstates.velocity[7]))
-        rr.log("JointVelocity/velocity/wheel_mr", rr.Scalar(jointstates.velocity[8]))
-
-        # ##### Efforts #####
-        rr.log("JointEffort/effort/wheel_fl", rr.Scalar(jointstates.effort[2]))
-        rr.log("JointEffort/effort/wheel_fr", rr.Scalar(jointstates.effort[4]))
-        rr.log("JointEffort/effort/wheel_bl", rr.Scalar(jointstates.effort[6]))
-        rr.log("JointEffort/effort/wheel_br", rr.Scalar(jointstates.effort[9]))
-        rr.log("JointEffort/effort/wheel_ml", rr.Scalar(jointstates.effort[7]))
-        rr.log("JointEffort/effort/wheel_mr", rr.Scalar(jointstates.effort[8]))
-
+        rr.log("imu/angular_velocity/x", rr.Scalar(imu.angular_velocity.x))
+        rr.log("imu/angular_velocity/y", rr.Scalar(imu.angular_velocity.y))
+        rr.log("imu/angular_velocity/z", rr.Scalar(imu.angular_velocity.z))
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Simple example of a ROS node that republishes to Rerun.")
@@ -296,12 +272,12 @@ def main() -> None:
     # Any remaining args go to rclpy
     rclpy.init(args=unknownargs)
 
-    pragyaan_subscriber = PragyaanSubscriber()
+    omnilrs_subscriber = OmniLRSSubscriber()
 
     # Use the MultiThreadedExecutor so that calls to `lookup_transform` don't block the other threads
-    rclpy.spin(pragyaan_subscriber, executor=rclpy.executors.MultiThreadedExecutor())
+    rclpy.spin(omnilrs_subscriber, executor=rclpy.executors.MultiThreadedExecutor())
 
-    pragyaan_subscriber.destroy_node()
+    omnilrs_subscriber.destroy_node()
     rclpy.shutdown()
 
 

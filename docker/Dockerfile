@@ -25,6 +25,7 @@ RUN apt-get update && \
         python3-colcon-common-extensions \
         python3-rosdep \
         python3-pip \
+        ros-$ROS_DISTRO-rqt-tf-tree \
         ros-$ROS_DISTRO-joy-linux \
         ros-$ROS_DISTRO-image-geometry && \
     rm -rf /var/lib/apt/lists/* && \
@@ -52,7 +53,9 @@ RUN apt install -y ros-$ROS_DISTRO-foxglove-bridge
 # RUN apt-get install -y ros-${ROS_DISTRO}-octomap-mapping
 
 COPY requirements.txt /tmp/
-RUN pip3 install -r /tmp/requirements.txt
+RUN pip3 install --no-cache-dir --upgrade pip \
+  && pip3 install --no-cache-dir -r /tmp/requirements.txt
+
 
 WORKDIR /ros2_ws
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> /root/.bashrc
