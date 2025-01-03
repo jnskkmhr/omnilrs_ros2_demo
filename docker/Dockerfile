@@ -52,7 +52,7 @@ RUN apt install -y ros-$ROS_DISTRO-foxglove-bridge
 # RUN apt-get install -y ros-${ROS_DISTRO}-octomap-mapping
 
 COPY requirements.txt /tmp/
-RUN pip3 install -r /tmp/requirements.txts
+RUN pip3 install -r /tmp/requirements.txt
 
 WORKDIR /ros2_ws
 RUN echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> /root/.bashrc
