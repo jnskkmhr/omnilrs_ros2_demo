@@ -20,8 +20,9 @@ cd omnilrs_ros2_demo
 cd omnilrs_ros2_demo
 ./docker/run_container.sh
 
-# then build package
+# then build package & source
 colcon build --symlink-install
+source install/setup.bash
 ```
 
 
@@ -40,4 +41,20 @@ Inside container shell, run
 ```bash
 # one-liner script to run slam and navigation 
 /docker/humble_navigation.sh
+```
+
+## Usage for other visualisation tools
+
+### Foxglove Studio
+* You might need to install foxglove studio into your desktop, following the official website [installation guide](https://docs.foxglove.dev/docs/foxglove-agent/installation)
+* Once you run OmniLRS, you can run the following command to display data information (i.e. `/imu`, `/odom`, `/depth_img`).
+```bash
+ros2 launch vis_tool foxglove_depth_encode.launch.py
+```
+> [!TIP]
+> You can use the example of our configuration by cliking at `LAYOUT` and `Import from file...`. Then navigate to the `/omnilrs_ros2_demo/humble_ws/src/vis_tool/config/OmniLRS_ros2.json`
+
+### Rerun.io
+```bash
+python3 src/vis_tool/scripts/rerun/rerun_omnilrs.py
 ```

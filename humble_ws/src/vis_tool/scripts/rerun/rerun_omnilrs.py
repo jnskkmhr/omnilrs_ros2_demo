@@ -174,7 +174,7 @@ class OmniLRSSubscriber(Node):  # type: ignore[misc]
         rr.log(
             "world/robot/camera/rgb_img",
             rr.Pinhole(
-                resolution=[self.model.width * 2 , self.model.height * 2],
+                resolution=[self.model.width , self.model.heights],
                 image_from_camera=self.model.intrinsicMatrix(),
             ),
         )
