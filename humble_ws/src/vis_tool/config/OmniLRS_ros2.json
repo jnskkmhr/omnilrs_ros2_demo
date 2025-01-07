@@ -247,6 +247,27 @@
       "xAxisPath": {
         "value": "/odom.pose.pose.position.y"
       }
+    },
+    "Teleop!20eqz6o": {
+      "topic": "/cmd_vel",
+      "publishRate": 1,
+      "upButton": {
+        "field": "linear-x",
+        "value": 1
+      },
+      "downButton": {
+        "field": "linear-x",
+        "value": 0
+      },
+      "leftButton": {
+        "field": "angular-z",
+        "value": 1
+      },
+      "rightButton": {
+        "field": "angular-z",
+        "value": -1
+      },
+      "foxglovePanelTitle": ""
     }
   },
   "globalVariables": {},
@@ -266,7 +287,11 @@
     },
     "second": {
       "first": "Plot!21z6brv",
-      "second": "Plot!1y5zrjb",
+      "second": {
+        "first": "Plot!1y5zrjb",
+        "second": "Teleop!20eqz6o",
+        "direction": "column"
+      },
       "direction": "column",
       "splitPercentage": 36.37566137566138
     },
