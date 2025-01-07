@@ -47,17 +47,21 @@ Inside container shell, run
 
 ### Foxglove Studio
 * You might need to install foxglove studio into your desktop, following the official website [installation guide](https://docs.foxglove.dev/docs/foxglove-agent/installation)
-* Once you run OmniLRS, you can run the following command to display data information (i.e. `/imu`, `/odom`, `/depth_img`).
-> [!NOTE]
-> For the given example of configuration file, we assume that you are running the OmniLRS with `ros2_husky_PhysC_vlp16_mono_depth_imu.usd`. You can check this by looking into the `OmniLRS/cfg/environment/<ENVIRONMENT.yaml>`
+* Make sure that you have built and sourced the `install/setup.bash` inside the terminal.
+* Once the OmniLRS is running, you can run the following command to display data information (i.e. `/imu`, `/odom`, `/depth_img`).
 
 ```bash
+# This should run inside the docker
 ros2 launch vis_tool foxglove_depth_encode.launch.py
 ```
 > [!TIP]
 > You can use the example of our configuration by cliking at `LAYOUT` and `Import from file...`. Then navigate to the `/omnilrs_ros2_demo/humble_ws/src/vis_tool/config/OmniLRS_ros2.json`
 
+> [!NOTE]
+> For the given example of configuration file, we assume that you are running the OmniLRS with `ros2_husky_PhysC_vlp16_mono_depth_imu.usd`. You can check this by looking into the `OmniLRS/cfg/environment/<ENVIRONMENT.yaml>`
+
 ### Rerun.io
+Same as the Foxglove, you should run this inside the docker.
 ```bash
 python3 src/vis_tool/scripts/rerun/rerun_omnilrs.py
 ```

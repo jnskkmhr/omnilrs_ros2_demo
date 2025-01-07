@@ -10,7 +10,7 @@ DOCKER_RUN_CMD="docker run -it --rm --privileged \
                 -e XDG_RUNTIME_DIR=/tmp/runtime-docker \
                 -e "ACCEPT_EULA=Y" \
                 -e DISPLAY \
-                -e "PRIVACY_CONSENT=Y"                 
+                -e "PRIVACY_CONSENT=Y" \                 
                 -v $HOME/.Xauthority:/root/.Xauthority \
                 -v /dev/:/dev/
                 -v $PWD/docker:/docker \
