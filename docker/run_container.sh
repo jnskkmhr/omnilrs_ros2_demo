@@ -9,13 +9,13 @@ DOCKER_RUN_CMD="docker run -it --rm --privileged \
                 -e NVIDIA_DRIVER_CAPABILITIES=all \
                 -e XDG_RUNTIME_DIR=/tmp/runtime-docker \
                 -e "ACCEPT_EULA=Y" \
-                -e DISPLAY \
-                -e "PRIVACY_CONSENT=Y" \                 
+                -e "PRIVACY_CONSENT=Y" \
+                -e "DISPLAY=$DISPLAY" \
                 -v $HOME/.Xauthority:/root/.Xauthority \
-                -v /dev/:/dev/
+                -v /dev/:/dev/ \
                 -v $PWD/docker:/docker \
                 -v $PWD/humble_ws:/ros2_ws \
-                --net host \
+                --network=host \
                 --ipc=host \
                 --name $NAME \
                 $IMAGE"
