@@ -48,6 +48,9 @@ Inside container shell, run
 ### Foxglove Studio
 * You might need to install foxglove studio into your desktop, following the official website [installation guide](https://docs.foxglove.dev/docs/foxglove-agent/installation)
 * Once you run OmniLRS, you can run the following command to display data information (i.e. `/imu`, `/odom`, `/depth_img`).
+> [!NOTE]
+> For the given example of configuration file, we assume that you are running the OmniLRS with `ros2_husky_PhysC_vlp16_mono_depth_imu.usd`. You can check this by looking into the `OmniLRS/cfg/environment/<ENVIRONMENT.yaml>`
+
 ```bash
 ros2 launch vis_tool foxglove_depth_encode.launch.py
 ```
