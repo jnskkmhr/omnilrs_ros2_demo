@@ -27,7 +27,13 @@ source install/setup.bash
 
 
 ## Run
-
+Make sure that you have installed the docker version of [OmniLRS](https://github.com/TharitSinsunthorn/OmniLRS/tree/main) and run the simulation.
+```bash
+# Run the simulation docker
+./omnilrs.docker/run_docker.sh
+# Launch simulation
+/isaac-sim/python.sh run.py environment=lunalab
+```
 ### joystick teleoperation
 Inside container shell, run
 ```bash
@@ -47,21 +53,28 @@ Inside container shell, run
 
 ### Foxglove Studio
 * You might need to install foxglove studio into your desktop, following the official website [installation guide](https://docs.foxglove.dev/docs/foxglove-agent/installation)
-* Make sure that you have built and sourced the `install/setup.bash` inside the terminal.
 * Once the OmniLRS is running, you can run the following command to display data information (i.e. `/imu`, `/odom`, `/depth_img`).
 
 ```bash
-# This should run inside the docker
+cd omnilrs_ros2_demo
+./docker/run_container.sh
+
+source install/setup.bash
+
 ros2 launch vis_tool foxglove_depth_encode.launch.py
 ```
 > [!TIP]
 > You can use the example of our configuration by cliking at `LAYOUT` and `Import from file...`. Then navigate to the `/omnilrs_ros2_demo/humble_ws/src/vis_tool/config/OmniLRS_ros2.json`
-
-> [!NOTE]
 > For the given example of configuration file, we assume that you are running the OmniLRS with `ros2_husky_PhysC_vlp16_mono_depth_imu.usd`. You can check this by looking into the `OmniLRS/cfg/environment/<ENVIRONMENT.yaml>`
+> The navigation feature is not included in this layout.
 
 ### Rerun.io
-Same as the Foxglove, you should run this inside the docker.
+Once the OmniLRS is running, you can run the following command to display the same data inside rerun.
 ```bash
+cd omnilrs_ros2_demo
+./docker/run_container.sh
+
+source install/setup.bash
+
 python3 src/vis_tool/scripts/rerun/rerun_omnilrs.py
 ```
