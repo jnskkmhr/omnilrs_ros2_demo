@@ -27,7 +27,7 @@ source install/setup.bash
 
 
 ## Run
-Make sure that you have installed the docker version of [OmniLRS](https://github.com/TharitSinsunthorn/OmniLRS/tree/main) and run the simulation.
+Make sure that you have installed the docker version of [OmniLRS](https://github.com/AntoineRichard/OmniLRS) and run the simulation.
 ```bash
 # Run the simulation docker
 ./omnilrs.docker/run_docker.sh
@@ -52,6 +52,8 @@ Inside container shell, run
 ## Usage for other visualisation tools
 
 ### Foxglove Studio
+<img src="media/foxglove.png">
+
 * You might need to install foxglove studio into your desktop, following the official website [installation guide](https://docs.foxglove.dev/docs/foxglove-agent/installation)
 * Once the OmniLRS is running, you can run the following command to display data information (i.e. `/imu`, `/odom`, `/depth_img`).
 
@@ -69,6 +71,8 @@ ros2 launch vis_tool foxglove_depth_encode.launch.py
 > The navigation feature is not included in this layout.
 
 ### Rerun.io
+<img src="media/rerun.png">
+
 Once the OmniLRS is running, you can run the following command to display the same data inside rerun.
 ```bash
 cd omnilrs_ros2_demo
